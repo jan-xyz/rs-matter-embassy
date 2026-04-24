@@ -203,8 +203,8 @@ openthread = { version = "0.1", optional = true, features = ["udp", "srp", "edge
 rand_core = "0.9"
 
 # Only necessary when `rs-matter-embassy` is providing extra-sugar for the `esp32*` chips family
-esp-radio = { version = "0.17", optional = true, features = ["ble"] }
-esp-hal = { version = "1", optional = true, features = ["unstable"] }
+esp-radio = { version = "0.18", optional = true, features = ["ble"] }
+esp-hal = { version = "1.1", optional = true, features = ["unstable"] }
 
 # Only necessary when `rs-matter-embassy` is providing extra-sugar for the RPi Pico W MCU
 cyw43 = { version = "0.7", optional = true, features = ["firmware-logs", "bluetooth"] }

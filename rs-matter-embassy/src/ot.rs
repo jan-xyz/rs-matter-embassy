@@ -460,17 +460,17 @@ impl<'d> OtMdns<'d> {
                 ..Default::default()
             });
 
-            let _ = self.ot.srp_remove_all(false);
+            if !self.ot.srp_is_empty().unwrap_or(true) {
+                let _ = self.ot.srp_remove_all(false);
 
-            // TODO: Something is still not quite right with the SRP
-            // We seem to get stuck here
-            while !self.ot.srp_is_empty()? {
-                debug!("Waiting for SRP records to be removed...");
-                select(
-                    Timer::after(Duration::from_secs(1)),
-                    self.ot.srp_wait_changed(),
-                )
-                .await;
+                while !self.ot.srp_is_empty().unwrap_or(true) {
+                    debug!("Waiting for SRP records to be removed...");
+                    select(
+                        Timer::after(Duration::from_secs(1)),
+                        self.ot.srp_wait_changed(),
+                    )
+                    .await;
+                }
             }
 
             self.ot.srp_set_conf(&SrpConf {
@@ -511,6 +511,11 @@ impl<'d> OtMdns<'d> {
             }));
 
             matter.wait_mdns().await;
+
+            // Debounce: the registration above likely triggered an mDNS change
+            // notification. Wait long enough for it to settle, then drain any
+            // stale signal so we don't immediately re-trigger a remove cycle.
+            Timer::after(Duration::from_secs(10)).await;
         }
     }
 }

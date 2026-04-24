@@ -137,7 +137,7 @@ async fn main(_s: Spawner) {
     let on_off = on_off::OnOffHandler::new_standalone(
         Dataver::new_rand(&mut weak_rand),
         LIGHT_ENDPOINT_ID,
-        TestOnOffDeviceLogic::new(true),
+        TestOnOffDeviceLogic::new(false),
     );
 
     // Chain our endpoint clusters
